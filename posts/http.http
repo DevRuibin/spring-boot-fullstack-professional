@@ -1,0 +1,13 @@
+POST http://localhost:8080/api/posts/
+Content-Type: application/json
+
+{
+  "id": 101,
+  "userId": 1,
+  "title": "101 Title",
+  "body": "101 Body",
+  "version": 1
+}
+
+### Get
+GET http://localhost:8080/api/posts/1
