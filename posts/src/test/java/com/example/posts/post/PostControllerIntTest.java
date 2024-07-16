@@ -62,9 +62,9 @@ public class PostControllerIntTest {
         ResponseEntity<Post> response = restTemplate.postForEntity("/api/posts", post, Post.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(response.getBody()).isNotNull();
-        assertThat(Objects.requireNonNull(response.getBody()).userId()).isEqualTo(1);
-        assertThat(Objects.requireNonNull(response.getBody()).title()).isEqualTo("101 Title");
-        assertThat(Objects.requireNonNull(response.getBody()).body()).isEqualTo("101 Body");
+        assertThat(Objects.requireNonNull(response.getBody()).getUserId()).isEqualTo(1);
+        assertThat(Objects.requireNonNull(response.getBody()).getTitle()).isEqualTo("101 Title");
+        assertThat(Objects.requireNonNull(response.getBody()).getBody()).isEqualTo("101 Body");
     }
 
     @Test
@@ -83,15 +83,15 @@ public class PostControllerIntTest {
         Post post = response.getBody();
         assertThat(post).isNotNull();
         assert post != null;
-        Post updatedPost = new Post(post.id(), post.userId(), "NEW POST TITLE", "NEW POST BODY", post.version());
+        Post updatedPost = new Post(post.getId(), post.getUserId(), "NEW POST TITLE", "NEW POST BODY", post.getVersion());
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<Post> updatedEntity = new HttpEntity<>(updatedPost, headers);
 
         ResponseEntity<Post> response2 = restTemplate.exchange("/api/posts/1", HttpMethod.PUT, updatedEntity, Post.class);
         assertThat(response2.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response2.getBody()).isNotNull();
-        assertThat(Objects.requireNonNull(response2.getBody()).title()).isEqualTo("NEW POST TITLE");
-        assertThat(Objects.requireNonNull(response2.getBody()).body()).isEqualTo("NEW POST BODY");
+        assertThat(Objects.requireNonNull(response2.getBody()).getTitle()).isEqualTo("NEW POST TITLE");
+        assertThat(Objects.requireNonNull(response2.getBody()).getBody()).isEqualTo("NEW POST BODY");
 
     }
 

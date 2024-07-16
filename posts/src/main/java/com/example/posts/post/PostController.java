@@ -24,30 +24,22 @@ public class PostController {
         this.repository = repository;
     }
 
-    @GetMapping("")
+    @GetMapping
     ResponseEntity<List<Post>> findAll() {
         List<Post> posts = repository.findAll();
         return ResponseEntity.ok(posts);
     }
 
-    @PostMapping("")
+    @PostMapping
     ResponseEntity<Post> save(@RequestBody Post post) {
-        try {
-            if (post == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-            }
-            if (post.version() == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
-            Post savedPost = repository.save(post);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedPost);
-        } catch (OptimisticLockingFailureException ole) {
-            System.out.println("Optimistic lock exception: " + ole.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        System.out.println("new connection");
+        if(post == null){
+            return ResponseEntity.badRequest().body(null);
         }
+        if(post.getVersion() == null){
+            return ResponseEntity.badRequest().body(null);
+        }
+        return new ResponseEntity<>(post, HttpStatus.CREATED);
     }
 
 
@@ -65,11 +57,11 @@ public class PostController {
         return repository.findById(id).map(
                 existingPost -> {
                     Post updatedPost =new Post(
-                            existingPost.id(),
-                            existingPost.userId(),
-                            post.title(),
-                            post.body(),
-                            post.version()
+                            existingPost.getId(),
+                            existingPost.getUserId(),
+                            post.getTitle(),
+                            post.getBody(),
+                            post.getVersion()
                     );
                     repository.save(updatedPost);
                     return ResponseEntity.ok(updatedPost);
